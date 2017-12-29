@@ -97,6 +97,16 @@
 
     // re-create WKWebView, since we need to update configuration
     WKWebView* wkWebView = [[WKWebView alloc] initWithFrame:self.engineWebView.frame configuration:configuration];
+ 
+    // FIX for iPhoneX fullscreen support, imported from (thanks to @lovelyelfpop):
+    // https://github.com/ionic-team/cordova-plugin-ionic-webview/blob/master/src/ios/CDVWKWebViewEngine.m
+    #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
+    if (@available(iOS 11.0, *)) {
+      [wkWebView.scrollView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
+    }
+    #endif
+    // END FIX
+ 
     wkWebView.UIDelegate = self.uiDelegate;
     self.engineWebView = wkWebView;
 
